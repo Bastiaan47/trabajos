@@ -8,8 +8,8 @@
 const int led_pos[led] ={40,38,36,32,26,24,22,18};
 const int led_neg[led] ={37,35,33,31,29,23,21,19};
 
-void Prender_Apagar();
 int inicio();
+void Prender_Apagar();
 const int RedLed=21;
 volatile sig_atomic_t signal_received = 0;
 
