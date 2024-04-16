@@ -11,6 +11,7 @@ const int led_neg[columnas] ={37,35,33,31,29,23,21,19};
 int inicio();
 void sigint_handler(int signal);
 void abrirMatriz(char *orden, int matriz[filas][columnas]);
+void Prender_Apagar(int matriz[filas][columnas]);
 volatile sig_atomic_t signal_received = 0;
 
 int main(){
