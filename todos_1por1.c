@@ -9,6 +9,7 @@ const int led_pos[led] ={40,38,36,32,26,24,22,18};
 const int led_neg[led] ={37,35,33,31,29,23,21,19};
 
 void Prender_Apagar();
+int inicio();
 const int RedLed=21;
 volatile sig_atomic_t signal_received = 0;
 
@@ -17,20 +18,23 @@ void sigint_handler(int signal){
 }
 
 int main(){
- //--Verifica si se inicio con exito
-   if(gpioInitialise()== PI_INIT_FAILED){ 
-      printf("ERROR: No funciona-Fallo en la interfaz\n");
-      return 1;
-   }
- //--Establecer controlador de señal--//
-   signal(SIGINT, sigint_handler);
-   printf("Pesiona CTRL-C para salir.\n");
- //--Prender y Apagar LED--//
-   Prender_Apagar();
+  inicio();
+  Prender_Apagar();
+  pioTerminate();
+  printf("\n");
+  return 0;
+}
 
-   pioTerminate();
-   printf("\n");
-   return 0;
+int inicio(){
+  //--Verifica si se inicio con exito
+  if(gpioInitialise()== PI_INIT_FAILED){ 
+    printf("ERROR: No funciona-Fallo en la interfaz\n");
+    return 1;
+  }
+  //--Establecer controlador de señal--//
+  signal(SIGINT, sigint_handler);
+  printf("Pesiona CTRL-C para salir.\n");
+
 }
 
 void Prender_Apagar(){
