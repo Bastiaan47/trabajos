@@ -42,10 +42,10 @@ int main(){
             for(int j=0;j<8;j++){
                 if(display_led[i][j]==1){
                     gpioWrite(positivos[j],PI_HIGH);
-                    gpioWrite(negativos[i],PI_HIGH);
+                    gpioWrite(negativos[i],PI_LOW);
                 }else{
                     gpioWrite(positivos[j],PI_LOW);
-                    gpioWrite(negativos[i],PI_LOW);
+                    gpioWrite(negativos[i],PI_HIGH);
                 }
             }
             time_sleep(0.5);
