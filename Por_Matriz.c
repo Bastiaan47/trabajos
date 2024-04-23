@@ -8,8 +8,9 @@
 #define filas 8
 #define columnas 8
 
-const int led_pos[filas] ={40,38,36,32,26,24,22,18};
-const int led_neg[columnas] ={37,35,33,31,29,23,21,19};
+//--numeros de los pines--//
+const int led_pos[filas] ={24,25,8,7,12,16,20,21};
+const int led_neg[columnas] ={10,9,11,5,6,13,19,26};
 int inicioGPIO();
 void sigint_handler(int signal);
 void abrirMatriz(char *orden, int matriz[filas][columnas]);
@@ -20,7 +21,11 @@ int main(){
     int matriz[filas][columnas];
     int tiempo = 0;
     abrirMatriz("orden.txt", matriz);
-    inicioGPIO();
+    if (inicioGPIO() == 1) return 1;
+    //--Establecer controlador de señal--//
+    signal(SIGINT, sigint_handler);
+    printf("Pesiona CTRL-C para salir.\n");
+    
     printf("ingrese la cantidad de segundos: \n");
     scanf("%d", &tiempo);
     Prender_Apagar(matriz, tiempo);
@@ -36,8 +41,15 @@ int inicioGPIO(){
     return 1;
   }
 
-  signal(SIGINT, sigint_handler);
-  printf("Pesiona CTRL-C para salir.\n");
+   //--Configurar pines positivos y negativos como salida--//
+   for(int i=0; i<filas; i++){
+      gpioSetMode(led_pos[i], PI_OUTPUT);
+      gpioSetMode(led_neg[i], PI_OUTPUT);
+      //--Apagar--//
+      gpioWrite(led_pos[i], PI_LOW);
+      gpioWrite(led_neg[i], PI_HIGH);
+      
+   }
   return 0;
 }
 
@@ -68,17 +80,15 @@ void Prender_Apagar(int matriz[filas][columnas], int tiempo){
 
     while ((seg = difftime(time(NULL), inicio))< tiempo && !signal_received){
         for(int i=0; i<filas; i++){
-            gpioSetMode(led_pos[i], PI_OUTPUT);
             for(int j=0; j<columnas; j++){
-                gpioSetMode(led_neg[j], PI_OUTPUT);
                 if (matriz[i][j] == 1){
                     gpioWrite(led_pos[i], PI_HIGH);
                     gpioWrite(led_neg[j], PI_LOW);
-                }else{
+                    time_sleep(0.001);
+    
                     gpioWrite(led_pos[i], PI_LOW);
                     gpioWrite(led_neg[j], PI_HIGH);
                 }
-                time_sleep(0.5);
             }
         }
     }
